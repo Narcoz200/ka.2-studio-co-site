@@ -1,0 +1,13 @@
+{
+  "name": "ka2-backend",
+  "version": "1.0.0",
+  "description": "Backend per KA.2 Staff Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

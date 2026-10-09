@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="it" class="h-full bg-[#FAF9F5] text-neutral-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KA.2 Staff Portal | Master Hub & Operazioni</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ========================================================================== */
+        /* STILI GENERALI E CONFIGURAZIONE TIPOGRAFICA                                */
+        /* ========================================================================== */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #FAF9F5; 
+            color: #1C1C1A; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .font-serif { 
+            font-family: 'Playfair Display', serif; 
+        }
+
+        /* ========================================================================== */
+        /* SCROLLBAR PERSONALIZZATA                                                   */
+        /* ========================================================================== */
+        ::-webkit-scrollbar { 
+            width: 6px; 
+            height: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #FAF9F5; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #D4D4CE; 
+            border-radius: 4px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: #A3A39E; 
+        }
+
+        /* ========================================================================== */
+        /* UTILITY DI TRANSIZIONE E ANIMAZIONE                                        */
+        /* ========================================================================== */
+        .transition-all-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="antialiased p-4 md:p-8 max-w-[1600px] mx-auto min-h-screen flex flex-col justify-between">
+
+    <!-- ========================================================================== -->
+    <!-- HEADER PRINCIPALE DEL PORTALE                                              -->
+    <!-- ========================================================================== -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-neutral-300 mb-8 gap-4 bg-white/50 backdrop-blur-md p-6 rounded-2xl shadow-sm border">
+        <div class="space-y-1">
+            <span class="text-[10px] uppercase tracking-[0.3em] text-neutral-500 block font-semibold">Pannello di Controllo Riservato &bull; Architettura Locale</span>
+            <h1 class="font-serif text-3xl md:text-4xl text-neutral-900 tracking-tight">KA.2 Staff Portal &bull; Master Hub</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-100 border border-neutral-200 text-xs text-neutral-700">
+                <i class="fa-solid fa-server text-neutral-400"></i>
+                <span>Storage: <strong class="text-neutral-900">LocalStorage Attivo</strong></span>
+            </div>
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-medium border border-emerald-200">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span> Sistema Live Sync (1s)
+            </span>
+            <a href="index.html" class="text-xs uppercase tracking-[0.2em] font-medium border-b-2 border-neutral-900 pb-0.5 hover:text-neutral-600 hover:border-neutral-600 transition-all">
+                &larr; Torna al Sito
+            </a>
+        </div>
+    </header>
+
+    <!-- ========================================================================== -->
+    <!-- CORPO PRINCIPALE: GRIGLIA A 12 COLONNE                                     -->
+    <!-- ========================================================================== -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow mb-8">
+        
+        <!-- ====================================================================== -->
+        <!-- COLONNA SINISTRA: CENTRO MESSAGGI CLIENTI (7 COLONNE)                  -->
+        <!-- ====================================================================== -->
+        <section class="lg:col-span-7 bg-white rounded-2xl border border-neutral-300 shadow-sm flex flex-col h-[750px] overflow-hidden">
+            
+            <!-- Intestazione Box Messaggi -->
+            <div class="p-4 bg-[#1C1C1A] text-[#FAF9F5] flex justify-between items-center shrink-0 border-b border-neutral-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center text-amber-500">
+                        <i class="fa-solid fa-comments text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-serif text-sm tracking-wider font-medium">Centro Messaggi (WhatsApp Style)</h2>
+                        <span class="text-[10px] text-neutral-400">Sincronizzazione bidirezionale istantanea</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="active-chat-indicator" class="text-[10px] text-neutral-300 uppercase tracking-widest bg-neutral-800 px-3 py-1.5 rounded-md border border-neutral-700">Nessuna chat selezionata</span>
+                </div>
+            </div>
+
+            <!-- Griglia interna: Sidebar Contatti (5) + Finestra Chat (7) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 flex-grow overflow-hidden">
+                
+                <!-- Sidebar Contatti (Ordinamento Alfabetico A-Z) -->
+                <div id="chats-sidebar" class="md:col-span-5 border-r border-neutral-200 overflow-y-auto bg-neutral-50/70 divide-y divide-neutral-200/80">
+                    <!-- Iniettato dinamicamente via JavaScript -->
+                </div>
+
+                <!-- Finestra Conversazione e Input Risposta -->
+                <div class="md:col-span-7 flex flex-col h-full bg-white overflow-hidden justify-between">
+                    
+                    <!-- Area Storico Messaggi -->
+                    <div id="active-chat-messages" class="p-5 overflow-y-auto space-y-3.5 text-xs bg-white flex-grow">
+                        <div class="flex flex-col items-center justify-center h-full text-center text-neutral-400 space-y-3 p-6">
+                            <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">
+                                <i class="fa-regular fa-folder-open text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-neutral-700 mb-1">Nessuna conversazione selezionata</p>
+                                <p class="italic text-[11px] text-neutral-400">Seleziona un cliente dalla lista di sinistra per visualizzare la cronologia completa e rispondere in tempo reale.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Risposta Staff (Fisso in basso) -->
+                    <div class="p-3.5 bg-neutral-100 border-t border-neutral-200 flex gap-2.5 shrink-0 items-center">
+                        <div class="relative flex-grow">
+                            <input type="text" id="staff-reply-input" placeholder="Scrivi una risposta ufficiale come Staff..." class="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-neutral-900 transition-colors shadow-inner" onkeypress="if(event.key === 'Enter') sendStaffReply()">
+                        </div>
+                        <button onclick="sendStaffReply()" class="bg-[#1C1C1A] text-white px-5 py-2.5 rounded-xl text-xs font-medium hover:bg-neutral-800 transition-all flex items-center gap-2 shrink-0 shadow-sm">
+                            <span>Invia</span>
+                            <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- COLONNA DESTRA: AGENDA & APPUNTAMENTI (5 COLONNE)                      -->
+        <!-- ====================================================================== -->
+        <section class="lg:col-span-5 space-y-6 flex flex-col">
+            <div class="bg-white p-6 rounded-2xl border border-neutral-300 shadow-sm flex flex-col h-[750px] justify-between">
+                
+                <div class="space-y-6 overflow-hidden flex flex-col h-full">
+                    <!-- Intestazione Agenda -->
+                    <div class="flex justify-between items-center pb-4 border-b border-neutral-200 shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-800 border border-neutral-200">
+                                <i class="fa-regular fa-calendar-days text-sm"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-serif text-xl text-neutral-900 leading-tight">Agenda Appuntamenti</h2>
+                                <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-medium">Sedi: Milano & Zurigo</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] uppercase tracking-widest bg-neutral-100 px-3 py-1.5 rounded-full text-neutral-700 font-semibold border border-neutral-200">Management</span>
+                    </div>
+
+                    <!-- Form Inserimento Nuovo Appuntamento -->
+                    <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3 shrink-0 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-700">Crea Nuovo Appuntamento</span>
+                            <i class="fa-solid fa-circle-plus text-neutral-400 text-xs"></i>
+                        </div>
+                        <input type="text" id="appt-title" placeholder="Titolo (es. Briefing Progetto Loft 17)" class="w-full bg-white border border-neutral-300 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-900 shadow-inner">
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <input type="date" id="appt-date" class="w-full bg-white border border-neutral-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-neutral-900 shadow-inner">
+                            <input type="text" id="appt-time" placeholder="Orario (es. 15:30)" class="w-full bg-white border border-neutral-300 rounded-lg px-3.5 py-2 text-xs focus:outline-none focus:border-neutral-900 shadow-inner">
+                        </div>
+                        <!-- Pulsante con animazione di salvataggio (Nero -> Verde con spunta) -->
+                        <button id="btn-save-appt" onclick="addNewAppointment()" class="w-full py-3 bg-[#1C1C1A] text-white rounded-xl text-xs font-medium hover:bg-neutral-800 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-plus text-[10px]"></i> 
+                            <span>Salva in Agenda</span>
+                        </button>
+                    </div>
+
+                    <!-- Lista Appuntamenti Salvati (Area scrollabile) -->
+                    <div class="flex flex-col flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-2 px-1 shrink-0">
+                            <h3 class="text-[11px] font-semibold uppercase tracking-wider text-neutral-600">Appuntamenti in Programma</h3>
+                            <span id="appt-counter" class="text-[10px] bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded font-mono">0 attivi</span>
+                        </div>
+                        <div id="appointments-list" class="space-y-3 overflow-y-auto pr-1 flex-grow">
+                            <!-- Iniettato dinamicamente da JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nota a piè di pagina del pannello appuntamenti -->
+                <div class="pt-4 mt-4 border-t border-neutral-200 text-center shrink-0">
+                    <span class="text-[10px] text-neutral-400 uppercase tracking-widest flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-emerald-600"></i> Dati protetti e persistenti in localStorage
+                    </span>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================================================== -->
+    <!-- FOOTER DEL PORTALE                                                         -->
+    <!-- ========================================================================== -->
+    <footer class="text-center py-4 border-t border-neutral-300 text-xs text-neutral-500 bg-white/50 backdrop-blur-md rounded-xl border">
+        KA.2 STUDIO & CO &bull; Internal Staff Portal v4.5 Master Enterprise Edition &bull; Tutti i diritti riservati
+    </footer>
+
+    <!-- ========================================================================== -->
+    <!-- SCRIPT DI GESTIONE APPLICAZIONE (LOGICA COMPLETA & ESTESA)                 -->
+    <!-- ========================================================================== -->
+    <script>
+        /* ====================================================================== */
+        /* 1. VARIABILI DI STATO GLOBALI                                         */
+        /* ====================================================================== */
+        let currentSelectedEmail = null;
+        let cachedSidebarHTML = "";
+        let cachedMessagesHTML = "";
+
+        /* ====================================================================== */
+        /* 2. INIZIALIZZAZIONE ALL'AVVIO                                          */
+        /* ====================================================================== */
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("KA.2 Staff Portal Master Hub inizializzato correttamente.");
+            renderSidebarChats();
+            renderAppointments();
+
+            // Loop di sincronizzazione automatica in tempo reale ogni 1000 millisecondi (1 secondo)
+            setInterval(() => {
+                renderSidebarChats();
+                if (currentSelectedEmail) {
+                    renderActiveChatMessages(currentSelectedEmail);
+                }
+            }, 1000);
+
+            // Sincronizzazione immediata in caso di eventi cross-tab o modifiche esterne del localStorage
+            window.addEventListener('storage', (event) => {
+                renderSidebarChats();
+                renderAppointments();
+                if (currentSelectedEmail) {
+                    renderActiveChatMessages(currentSelectedEmail);
+                }
+            });
+        });
+
+        /* ====================================================================== */
+        /* 3. GESTIONE CENTRO MESSAGGI & LISTA CONTATTI (WHATSAPP STYLE)          */
+        /* ====================================================================== */
+        function renderSidebarChats() {
+            const sidebar = document.getElementById('chats-sidebar');
+            let chatKeys = [];
+
+            // Scansione di tutte le chiavi nel localStorage alla ricerca di prefix "ka2_chat_"
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (key && key.startsWith('ka2_chat_')) {
+                    chatKeys.push(key);
+                }
+            }
+
+            // Mappatura ed elaborazione dei dati delle chat
+            let chatsData = chatKeys.map(key => {
+                let messages = JSON.parse(localStorage.getItem(key) || '[]');
+                let lastMsg = messages.length > 0 ? messages[messages.length - 1] : { text: "Nessun messaggio", time: "" };
+                
+                // Ricerca del nome reale del cliente escludendo mittenti di sistema come Bot o Staff
+                let clientName = messages.find(m => m.sender !== 'Bot KA.2' && m.sender !== 'Staff KA.2')?.sender || key.replace('ka2_chat_', '');
+                
+                return {
+                    key: key,
+                    email: key.replace('ka2_chat_', ''),
+                    name: clientName,
+                    lastText: lastMsg.text,
+                    time: lastMsg.time,
+                    totalMessages: messages.length
+                };
+            });
+
+            // Ordinamento alfabetico rigoroso (A-Z) basato sul nome del cliente
+            chatsData.sort((a, b) => a.name.localeCompare(b.name));
+
+            if (chatsData.length === 0) {
+                const emptyHTML = `
+                    <div class="p-8 text-center text-neutral-400 italic text-xs space-y-2">
+                        <i class="fa-regular fa-comments text-2xl text-neutral-300"></i>
+                        <p>Nessuna conversazione attiva trovata nel sistema locale.</p>
+                    </div>
+                `;
+                if (sidebar.innerHTML !== emptyHTML) {
+                    sidebar.innerHTML = emptyHTML;
+                }
+                return;
+            }
+
+            let html = '';
+            chatsData.forEach(chat => {
+                let isSelected = currentSelectedEmail === chat.email;
+                let activeClass = isSelected 
+                    ? 'bg-neutral-200/80 border-l-4 border-neutral-900 font-semibold shadow-sm' 
+                    : 'hover:bg-neutral-100/80';
+                
+                html += `
+                    <div onclick="selectChat('${chat.email}', '${chat.name}')" class="p-4 cursor-pointer transition-all-custom ${activeClass} border-b border-neutral-200/60 relative group">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-xs text-neutral-900 truncate font-medium group-hover:text-black">${chat.name}</h4>
+                            <span class="text-[9px] text-neutral-400 font-mono">${chat.time}</span>
+                        </div>
+                        <p class="text-[11px] text-neutral-500 truncate font-light pr-2">${chat.lastText}</p>
+                        <span class="absolute top-3 right-3 w-1.5 h-1.5 rounded-full bg-neutral-400 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    </div>
+                `;
+            });
+
+            // Aggiornamento DOM ottimizzato per evitare flickering
+            if (cachedSidebarHTML !== html) {
+                cachedSidebarHTML = html;
+                sidebar.innerHTML = html;
+            }
+        }
+
+        function selectChat(email, name) {
+            currentSelectedEmail = email;
+            const indicator = document.getElementById('active-chat-indicator');
+            indicator.innerText = `Chat: ${name}`;
+            indicator.className = "text-[10px] text-emerald-400 uppercase tracking-widest bg-neutral-800 px-3 py-1.5 rounded-md border border-neutral-700 font-semibold shadow-inner";
+            
+            renderSidebarChats();
+            renderActiveChatMessages(email);
+        }
+
+        function renderActiveChatMessages(email) {
+            const container = document.getElementById('active-chat-messages');
+            const storageKey = `ka2_chat_${email}`;
+            let messages = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-center text-neutral-400 space-y-2">
+                        <i class="fa-regular fa-comment-dots text-2xl text-neutral-300"></i>
+                        <p class="italic text-xs">Nessun messaggio registrato in questa chat privata.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="space-y-3.5 pb-2">';
+            messages.forEach(m => {
+                let isStaff = m.sender === 'Staff KA.2';
+                let isBot = m.sender === 'Bot KA.2';
+                
+                let bubbleStyle = isStaff 
+                    ? 'bg-[#1C1C1A] text-white ml-auto rounded-2xl rounded-br-sm shadow-md' 
+                    : (isBot 
+                        ? 'bg-neutral-100 text-neutral-800 mr-auto rounded-2xl rounded-bl-sm font-medium border border-neutral-300 shadow-sm' 
+                        : 'bg-amber-50/80 text-neutral-900 mr-auto rounded-2xl rounded-bl-sm border border-amber-200/60 shadow-sm');
+
+                html += `
+                    <div class="p-3.5 max-w-[85%] text-xs ${bubbleStyle} transition-all">
+                        <div class="flex items-center justify-between gap-4 mb-1 opacity-75">
+                            <strong class="text-[9px] font-semibold uppercase tracking-wider">${m.sender}</strong>
+                            <span class="text-[9px] font-mono">${m.time}</span>
+                        </div>
+                        <div class="leading-relaxed break-words font-normal text-[11.5px]">${m.text}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            // Aggiorna l'HTML del contenitore e gestisce lo scroll automatico verso il basso
+            if (cachedMessagesHTML !== html) {
+                cachedMessagesHTML = html;
+                container.innerHTML = html;
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function sendStaffReply() {
+            const input = document.getElementById('staff-reply-input');
+            const text = input.value.trim();
+
+            if (!text) return;
+            if (!currentSelectedEmail) {
+                alert('Attenzione: Seleziona prima un cliente dalla colonna di sinistra per inviare la risposta!');
+                return;
+            }
+
+            const storageKey = `ka2_chat_${currentSelectedEmail}`;
+            let messages = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+            // Creazione del nuovo messaggio inviato dallo staff
+            messages.push({
+                sender: 'Staff KA.2',
+                text: text,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+
+            localStorage.setItem(storageKey, JSON.stringify(messages));
+            input.value = '';
+            
+            // Aggiornamento immediato delle viste
+            renderActiveChatMessages(currentSelectedEmail);
+            renderSidebarChats();
+        }
+
+        /* ====================================================================== */
+        /* 4. GESTIONE AGENDA APPUNTAMENTI & ANIMAZIONE CONFERMA                  */
+        /* ====================================================================== */
+        function renderAppointments() {
+            const listContainer = document.getElementById('appointments-list');
+            const counterElement = document.getElementById('appt-counter');
+            let appts = JSON.parse(localStorage.getItem('ka2_appointments') || '[]');
+
+            counterElement.innerText = `${appts.length} attiv${appts.length === 1 ? 'o' : 'i'}`;
+
+            if (appts.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="p-8 text-center text-neutral-400 italic text-xs bg-neutral-50 rounded-xl border border-dashed border-neutral-300 space-y-2">
+                        <i class="fa-regular fa-calendar-xmark text-xl text-neutral-300"></i>
+                        <p>Nessun appuntamento registrato in agenda.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            appts.forEach((app, index) => {
+                html += `
+                    <div class="flex justify-between items-center p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/80 text-xs transition-all hover:bg-neutral-100/80 shadow-xs">
+                        <div class="space-y-1">
+                            <strong class="block text-neutral-900 font-semibold tracking-tight">${app.title}</strong>
+                            <div class="flex items-center gap-3 text-[10px] text-neutral-500 font-medium">
+                                <span class="flex items-center gap-1"><i class="fa-regular fa-calendar text-neutral-400"></i>${app.date}</span>
+                                <span class="flex items-center gap-1"><i class="fa-regular fa-clock text-neutral-400"></i>${app.time}</span>
+                            </div>
+                        </div>
+                        <button onclick="deleteAppointment(${index})" class="text-neutral-400 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 transition-colors" title="Elimina appuntamento">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = html;
+        }
+
+        function addNewAppointment() {
+            const titleInput = document.getElementById('appt-title');
+            const dateInput = document.getElementById('appt-date');
+            const timeInput = document.getElementById('appt-time');
+
+            const title = titleInput.value.trim();
+            const date = dateInput.value;
+            const time = timeInput.value.trim();
+
+            if (!title || !date) {
+                alert('Campi obbligatori mancanti: inserisci almeno il titolo e la data dell\'appuntamento.');
+                return;
+            }
+
+            let appts = JSON.parse(localStorage.getItem('ka2_appointments') || '[]');
+            appts.push({ 
+                title: title, 
+                date: date, 
+                time: time || 'Orario flessibile' 
+            });
+            
+            localStorage.setItem('ka2_appointments', JSON.stringify(appts));
+
+            // Reset dei campi del modulo
+            titleInput.value = '';
+            dateInput.value = '';
+            timeInput.value = '';
+            
+            // Aggiornamento immediato della lista visiva
+            renderAppointments();
+
+            // Animazione avanzata del pulsante (Nero -> Sfondo Verde Smeraldo con icona di spunta e feedback testuale)
+            const btn = document.getElementById('btn-save-appt');
+            btn.className = "w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-medium transition-all duration-300 flex items-center justify-center gap-2 shadow-md";
+            btn.innerHTML = `<i class="fa-solid fa-check text-xs"></i> <span>Salvato con successo in agenda!</span>`;
+
+            // Ripristino dello stato originale del pulsante dopo 1.5 secondi
+            setTimeout(() => {
+                btn.className = "w-full py-3 bg-[#1C1C1A] text-white rounded-xl text-xs font-medium hover:bg-neutral-800 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm";
+                btn.innerHTML = `<i class="fa-solid fa-plus text-[10px]"></i> <span>Salva in Agenda</span>`;
+            }, 1500);
+        }
+
+        function deleteAppointment(index) {
+            let appts = JSON.parse(localStorage.getItem('ka2_appointments') || '[]');
+            if (confirm("Sei sicuro di voler eliminare questo appuntamento dall'agenda?")) {
+                appts.splice(index, 1);
+                localStorage.setItem('ka2_appointments', JSON.stringify(appts));
+                renderAppointments();
+            }
+        }
+    </script>
+</body>
+</html>
